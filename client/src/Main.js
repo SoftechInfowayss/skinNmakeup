@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './Navbar';
-import Home from './Home';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
 // import Categories from './pages/Categories';
-import Aboutus from './Aboutus';
-import Contactus from './Contactus';
+import Aboutus from './pages/Aboutus';
+import Contactus from './pages/Contactus';
  
 // import Wishlist from './pages/Wishlist';
 // import Cart from './pages/Cart';

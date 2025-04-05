@@ -2,12 +2,13 @@ import React, { memo } from 'react'
 import { motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { FiArrowRight, FiArrowLeft, FiBookmark, FiShare2, FiHeart } from 'react-icons/fi';
-import skincare from "./image/skincare1.jpg"
-import spring from "./image/spring.jpg"
-import perfume from "./image/perfume4.jpg"
-import hair from "./image/hair2.jpg"
-import sun from "./image/sun.jpg"
-import morning from "./image/morning.jpg"
+import skincare from "../../image/skincare1.jpg";
+import spring from "../../image/spring.jpg";
+import perfume from "../../image/perfume4.jpg";
+import hair from "../../image/hair2.jpg";
+import sun from "../../image/sun.jpg";
+import morning from "../../image/morning.jpg";
+
 const beautyTips = [
   {
     title: "5-Step Night Routine for Glowing Skin",

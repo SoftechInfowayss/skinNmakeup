@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import hairmask from "./image/hairmask.jpg"
-import lipstick from "./image/lipstick.jpg"
-import perfume from "./image/perfume.jpg"
-import serum from "./image/serum.jpg"
+import hairmask from "../../image/hairmask.jpg"
+import lipstick from "../../image/lipstick.jpg"
+import perfume from "../../image/perfume.jpg"
+import serum from "../../image/serum.jpg"
 const featuredProducts = [
     {
       name: "24H Hydra Glow Serum",

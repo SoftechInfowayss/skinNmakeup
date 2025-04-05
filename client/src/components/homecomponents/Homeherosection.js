@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
-import makeup from "./image/makeup.jpg"
-import skincare from "./image/skincare.jpg"
-import hair from "./image/hair1.jpg"
-import perfume from "./image/perfume1.jpg"
+import makeup from "../../image/makeup.jpg"
+import skincare from "../../image/skincare.jpg"
+import hair from "../../image/hair1.jpg"
+import perfume from "../../image/perfume1.jpg"
 const BeautyHomepage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const constraintsRef = useRef(null);

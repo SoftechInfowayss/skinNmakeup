@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import perfume from "./image/perfume3.jpg"
+import perfume from "../../image/perfume3.jpg"
 const categories = [
     {
       name: "Skincare",
