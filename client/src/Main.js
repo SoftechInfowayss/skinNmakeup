@@ -9,7 +9,7 @@ import Contactus from './Contactus';
 // import Cart from './pages/Cart';
 // import Account from './pages/Account';
 
-function App() {
+function Main() {
   return (
     <Router>
       <Navbar />
@@ -26,4 +26,4 @@ function App() {
   );
 }
 
-export default App;
+export default Main;

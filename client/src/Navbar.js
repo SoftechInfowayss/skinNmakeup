@@ -1,63 +1,71 @@
 import { useState } from 'react';
 import { FiMenu, FiX, FiShoppingCart, FiUser, FiSearch, FiHeart } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const navItems = ["Home" ,"Categories", "About Us", "Contact Us"];
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "Categories", path: "/categories" },
+    { name: "About Us", path: "/about" },
+    { name: "Contact Us", path: "/contact" }
+  ];
 
   return (
     <nav className="bg-gradient-to-r from-rose-400 to-rose-600 sticky top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          {/* Logo - Changed to white for contrast */}
+          {/* Logo */}
           <div className="flex-shrink-0 flex items-center space-x-2 group">
-  {/* Animated Diamond Icon */}
-  <div className="relative">
-    <svg 
-      className="w-8 h-8 text-rose-200 group-hover:text-white transition-all duration-500 transform group-hover:rotate-45"
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor"
-    >
-      <path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        strokeWidth={1.5} 
-        d="M12 6l8 8-8 8-8-8 8-8z"
-      />
-    </svg>
-    <div className="absolute inset-0 rounded-full border-2 border-rose-200/30 group-hover:border-rose-100/50 pointer-events-none animate-pulse"></div>
-  </div>
+            <Link to="/" className="flex items-center space-x-2">
+              {/* Animated Diamond Icon */}
+              <div className="relative">
+                <svg 
+                  className="w-8 h-8 text-rose-200 group-hover:text-white transition-all duration-500 transform group-hover:rotate-45"
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={1.5} 
+                    d="M12 6l8 8-8 8-8-8 8-8z"
+                  />
+                </svg>
+                <div className="absolute inset-0 rounded-full border-2 border-rose-200/30 group-hover:border-rose-100/50 pointer-events-none animate-pulse"></div>
+              </div>
 
-  {/* Text with Gradient */}
-  <div className="flex flex-col leading-tight">
-    <span className="text-2xl font-bold bg-gradient-to-r from-rose-100 to-white bg-clip-text text-transparent font-serif tracking-tight drop-shadow-md">
-      GLAMOUR
-    </span>
-    <span className="text-xl font-light bg-gradient-to-r from-rose-200/90 to-rose-100 bg-clip-text text-transparent font-serif tracking-widest">
-      HAVEN
-    </span>
-  </div>
+              {/* Text with Gradient */}
+              <div className="flex flex-col leading-tight">
+                <span className="text-2xl font-bold bg-gradient-to-r from-rose-100 to-white bg-clip-text text-transparent font-serif tracking-tight drop-shadow-md">
+                  GLAMOUR
+                </span>
+                <span className="text-xl font-light bg-gradient-to-r from-rose-200/90 to-rose-100 bg-clip-text text-transparent font-serif tracking-widest">
+                  HAVEN
+                </span>
+              </div>
 
-  {/* Glow Effect */}
-  <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 bg-rose-400/10 blur-md transition-opacity duration-300 pointer-events-none"></div>
-</div>
+              {/* Glow Effect */}
+              <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 bg-rose-400/10 blur-md transition-opacity duration-300 pointer-events-none"></div>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {/* Main Navigation Items - White text with subtle hover effect */}
             <div className="flex space-x-6">
               {navItems.map((item) => (
-                <a 
-                  key={item}
-                  href="#"
+                <Link 
+                  key={item.name}
+                  to={item.path}
                   className="text-white hover:text-white/90 px-2 py-2 font-medium text-sm uppercase tracking-wider transition-colors duration-200 relative group"
                 >
-                  {item}
+                  {item.name}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -80,20 +88,20 @@ const Navbar = () => {
 
             {/* Icons - White with subtle glow */}
             <div className="flex items-center space-x-5 ml-4">
-              <a href="#" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200 relative">
+              <Link to="/wishlist" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200 relative">
                 <FiHeart className="h-5 w-5" />
                 <span className="sr-only">Wishlist</span>
                 <span className="absolute -top-1 -right-1 bg-white text-rose-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
-              </a>
-              <a href="#" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200 relative">
+              </Link>
+              <Link to="/cart" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200 relative">
                 <FiShoppingCart className="h-5 w-5" />
                 <span className="sr-only">Cart</span>
                 <span className="absolute -top-1 -right-1 bg-white text-rose-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">5</span>
-              </a>
-              <a href="#" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200">
+              </Link>
+              <Link to="/account" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200">
                 <FiUser className="h-5 w-5" />
                 <span className="sr-only">Account</span>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -134,37 +142,37 @@ const Navbar = () => {
             {/* Mobile Navigation Items */}
             <div className="space-y-2">
               {navItems.map((item) => (
-                <a
-                  key={item}
-                  href="#"
+                <Link
+                  key={item.name}
+                  to={item.path}
                   className="block px-4 py-3 rounded-md text-sm font-medium text-white hover:text-white/90 hover:bg-white/20 transition-colors duration-200"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  {item}
-                </a>
+                  {item.name}
+                </Link>
               ))}
             </div>
             
             {/* Mobile Icons */}
             <div className="flex justify-around pt-4 border-t border-white/20">
-              <a href="#" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200 relative">
+              <Link to="/wishlist" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200 relative" onClick={() => setIsMenuOpen(false)}>
                 <FiHeart className="h-5 w-5" />
                 <span className="sr-only">Wishlist</span>
                 <span className="absolute -top-1 -right-1 bg-white text-rose-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
-              </a>
-              <a href="#" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200 relative">
+              </Link>
+              <Link to="/cart" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200 relative" onClick={() => setIsMenuOpen(false)}>
                 <FiShoppingCart className="h-5 w-5" />
                 <span className="sr-only">Cart</span>
                 <span className="absolute -top-1 -right-1 bg-white text-rose-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">5</span>
-              </a>
-              <a href="#" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200">
+              </Link>
+              <Link to="/account" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                 <FiUser className="h-5 w-5" />
                 <span className="sr-only">Account</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
       )}
-     
     </nav>
   );
 };
