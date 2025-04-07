@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { LuAward, LuLeaf, LuHeart, LuChevronRight } from 'react-icons/lu';
 import { FaFlask, FaRecycle, FaComments } from 'react-icons/fa';
+import Herosection from '../components/Aboutcomponents/Herosection';
 
 const AboutUs = () => {
   // Team members data
@@ -68,7 +69,8 @@ const AboutUs = () => {
   return (
     <div className="bg-white min-h-screen overflow-hidden">
       {/* Hero Section - Parallax Effect */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <Herosection />
+      {/* <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1587&q=80')] bg-cover bg-center bg-fixed opacity-30"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/30"></div>
         
@@ -140,7 +142,7 @@ const AboutUs = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </motion.div>
-      </section>
+      </section> */}
 
       {/* Brand Introduction */}
       <section className="relative py-28 bg-white overflow-hidden">
