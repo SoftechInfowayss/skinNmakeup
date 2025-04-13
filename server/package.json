@@ -1,6 +1,16 @@
 {
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./server.js",
+    "build": "netlify deploy --prod"
+  },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "modules": "^0.4.0",
-    "node": "^18.20.8"
+    "mongoose": "^8.13.2",
+    "multer": "^1.4.5-lts.2",
+    "node": "^18.20.8",
+    "nodemon": "^3.1.9"
   }
 }
