@@ -1,9 +1,10 @@
+const fs = require('fs');
+
 const Product = require('../models/Product');
 
 const addProduct = async (req, res) => {
   try {
     const { title, description, price, category, subcategory } = req.body;
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     const newProduct = new Product({
       title,
@@ -11,8 +12,13 @@ const addProduct = async (req, res) => {
       price,
       category,
       subcategory,
-      imageUrl,
     });
+
+    // Save image data in database
+    if (req.file) {
+      newProduct.image.data = fs.readFileSync(req.file.path);
+      newProduct.image.contentType = req.file.mimetype;
+    }
 
     await newProduct.save();
     res.status(201).json({ success: true, message: 'Product added', product: newProduct });
@@ -20,6 +26,7 @@ const addProduct = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error adding product', error });
   }
 };
+
 
 const getProducts = async (req, res) => {
   try {

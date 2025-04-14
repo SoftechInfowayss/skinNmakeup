@@ -6,7 +6,10 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   category: { type: String, enum: ['Hair', 'Makeup', 'Skincare', 'Fragrance'], required: true },
   subcategory: { type: String, required: true },
-  imageUrl: String,
+  image: {
+    data: Buffer,
+    contentType: String
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

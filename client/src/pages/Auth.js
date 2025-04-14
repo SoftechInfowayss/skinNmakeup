@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LuUser, LuLock, LuMail, LuEye, LuEyeOff, LuSparkles, LuHeart, LuDiamond } from 'react-icons/lu';
+import { LuUser, LuLock, LuMail, LuEye, LuEyeOff, LuSparkles, LuHeart, LuDiamond, LuCheck } from 'react-icons/lu';
+import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,7 +11,10 @@ const AuthPage = () => {
     password: '',
     name: ''
   });
+  const [error, setError] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const navigate = useNavigate();
 
   const luxuryProducts = [
     {
@@ -33,6 +37,7 @@ const AuthPage = () => {
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % luxuryProducts.length);
+    setError('');
   };
 
   const handleInputChange = (e) => {
@@ -41,15 +46,99 @@ const AuthPage = () => {
       ...prev,
       [name]: value
     }));
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    setError('');
+
+    try {
+      const url = isLogin 
+        ? 'http://localhost:8080/api/auth/login' 
+        : 'http://localhost:8080/api/auth/signup';
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(isLogin 
+          ? { email: formData.email, password: formData.password }
+          : { name: formData.name, email: formData.email, password: formData.password }
+        ),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong');
+      }
+
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        
+        if (isLogin) {
+          navigate('/home'); // Navigate to home page only for login
+        } else {
+          // Show success popup for signup
+          setShowSuccessPopup(true);
+          // Reset form
+          setFormData({
+            email: '',
+            password: '',
+            name: ''
+          });
+        }
+      }
+
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50/80 to-purple-50/80 flex items-center justify-center p-4 overflow-hidden relative">
+      {/* Success Popup */}
+      {/* Success Popup */}
+<AnimatePresence>
+  {showSuccessPopup && (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ type: 'spring', damping: 20 }}
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black/30 backdrop-blur-sm"
+      onClick={() => setShowSuccessPopup(false)}
+    >
+      <motion.div 
+        className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex flex-col items-center text-center">
+          <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6">
+            <LuCheck className="text-green-500 text-4xl" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">Account Created!</h3>
+          <p className="text-gray-600 mb-6">
+            Welcome to Glamour Heaven! Your account has been successfully created. 
+            Please sign in to access your beauty profile.
+          </p>
+          <button
+            onClick={() => {
+              setShowSuccessPopup(false);
+              setIsLogin(true); // Switch to login form
+            }}
+            className="w-full bg-gradient-to-r from-rose-600 to-rose-500 text-white py-3 px-6 rounded-xl font-medium shadow-md hover:shadow-lg transition-all"
+          >
+            Sign In Now
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+      {/* Rest of your existing code remains the same */}
       {/* Floating luxury particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(20)].map((_, i) => (
@@ -204,6 +293,16 @@ const AuthPage = () => {
             transition={{ delay: 0.3 }}
             className="space-y-6"
           >
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-500 text-sm text-center"
+              >
+                {error}
+              </motion.div>
+            )}
+
             {!isLogin && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
