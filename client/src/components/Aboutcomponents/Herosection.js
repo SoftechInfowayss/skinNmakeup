@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { LuChevronRight, LuSparkles } from 'react-icons/lu';
 
 export default memo(function Aboutherosection() {
-  // Animation variants for cleaner code
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -14,7 +13,6 @@ export default memo(function Aboutherosection() {
       }
     }
   };
-
   const item = {
     hidden: { opacity: 0, y: 25 },
     show: { 
@@ -30,9 +28,7 @@ export default memo(function Aboutherosection() {
 
   return (
     <div className="bg-black min-h-screen overflow-hidden relative">
-      {/* Luxury Parallax Hero */}
       <section className="relative min-h-[110vh] flex items-center justify-center overflow-hidden">
-        {/* Multi-layer background with depth */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
             className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center will-change-transform"
@@ -45,8 +41,6 @@ export default memo(function Aboutherosection() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60"></div>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_30%,_rgba(0,0,0,0.7)_100%)]"></div>
-          
-          {/* Animated sparkle particles */}
           {[...Array(12)].map((_, i) => (
             <motion.div
               key={i}
