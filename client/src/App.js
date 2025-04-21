@@ -4,6 +4,7 @@ import './App.css';
 import Main from './Main'
 import AuthPage from './pages/Auth';
 import Herosection from './components/Aboutcomponents/Herosection';
+import AdminDashboard from './pages/Admindashboard';
 // import Home from './Home';
 // import Homecatergories from './Homecatergories';
 function App() {
@@ -14,6 +15,7 @@ function App() {
      {/* <Herosection /> */}
      <Main />
      {/* <Home /> */}
+     {/* <AdminDashboard /> */}
   
     </div>
   );

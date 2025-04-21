@@ -93,7 +93,7 @@ const Navbar = () => {
                 <span className="sr-only">Cart</span>
                 <span className="absolute -top-1 -right-1 bg-white text-rose-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">5</span>
               </Link>
-              <Link to="/account" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200">
+              <Link to="/adminlogin" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200">
                 <FiUser className="h-5 w-5" />
                 <span className="sr-only">Account</span>
               </Link>
@@ -140,7 +140,7 @@ const Navbar = () => {
             {/* Mobile Navigation Items */}
             <div className="space-y-2">
               {navItems.map((item) => (
-                <Link
+                <Link 
                   key={item.name}
                   to={item.path}
                   className="block px-4 py-3 rounded-md text-sm font-medium text-white hover:text-white/90 hover:bg-white/20 transition-colors duration-200"
@@ -170,7 +170,7 @@ const Navbar = () => {
                 <span className="sr-only">Cart</span>
                 <span className="absolute -top-1 -right-1 bg-white text-rose-600 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">5</span>
               </Link>
-              <Link to="/account" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/adminlogin" className="text-white hover:text-white/90 p-2 rounded-full hover:bg-white/20 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                 <FiUser className="h-5 w-5" />
                 <span className="sr-only">Account</span>
               </Link>

@@ -5,7 +5,8 @@ import Home from './pages/Home';
 import Aboutus from './pages/Aboutus';
 import Contactus from './pages/Contactus';
 import AuthPage from './pages/Auth';
- 
+ import AdminDashboard from './pages/Admindashboard';
+ import AdminLogin from './pages/Adminlogin';
 // import Wishlist from './pages/Wishlist';
 // import Cart from './pages/Cart';
 // import Account from './pages/Account';
@@ -20,6 +21,8 @@ function Main() {
         <Route path="/about" element={<Aboutus />} />
         <Route path="/contact" element={<Contactus />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/admindashboard" element={<AdminDashboard/>} />
+        <Route path="/adminlogin" element={<AdminLogin/>} />
         {/* <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/account" element={<Account />} /> */}
