@@ -29,7 +29,7 @@ const AdminDashboard = () => {
 
   const navItems = [
     { name: 'Dashboard', icon: <FiHome className="w-5 h-5" />, path: '/admin' },
-    { name: 'Add Product', icon: <FiPlus className="w-5 h-5" />, path: '/admin/add-product' },
+    { name: 'Add Product', icon: <FiPlus className="w-5 h-5" />, path: '/admin/addproduct' },
     { name: 'Products', icon: <FiPieChart className="w-5 h-5" />, path: '/admin/products' },
     { name: 'Users', icon: <FiUsers className="w-5 h-5" />, path: '/admin/users' },
     { name: 'Queries', icon: <FiInbox className="w-5 h-5" />, path: '/admin/queries' },
