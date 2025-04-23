@@ -21,7 +21,7 @@ const AdminLogin = () => {
       if (username === 'taruna' || password === '123456') {
         setError('Please fill in all fields');
         setIsLoading(false);
-        navigate('/admindashboard');
+        navigate('/admin');
         return;
       }
       // Add your authentication logic here (e.g., API call)
