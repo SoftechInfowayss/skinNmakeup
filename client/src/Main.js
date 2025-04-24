@@ -9,7 +9,7 @@ import AdminLogin from './pages/Adminlogin';
 import AdminAddProduct from './pages/Adminaddproduct';
 import Adminuser from './pages/Adminuser';
 import Adminqueries from './pages/Adminqueries';
-
+import Adminproduct from './pages/Adminproducts'
 function Main() {
   return (
     <Router>
@@ -26,6 +26,7 @@ function Main() {
           <Route path="addproduct" element={<AdminAddProduct />} />
           <Route path="users" element={<Adminuser />} />
           <Route path="queries" element={<Adminqueries />} />
+          <Route path="products" element={<Adminproduct />} />
           {/* Add other admin routes here */}
           <Route index element={<div className="p-6"><h2 className="text-2xl font-bold text-gray-800">Dashboard Overview</h2></div>} />
         </Route>

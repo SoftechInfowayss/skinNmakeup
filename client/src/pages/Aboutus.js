@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { LuAward, LuLeaf, LuHeart, LuChevronRight } from 'react-icons/lu';
 import { FaFlask, FaRecycle, FaComments } from 'react-icons/fa';
 import Herosection from '../components/Aboutcomponents/Herosection';
-
+import Footer from '../components/Footer';
 const AboutUs = () => {
   // Team members data
   const teamMembers = [
@@ -518,7 +518,7 @@ const AboutUs = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-28 overflow-hidden">
+      {/* <section className="relative py-28 overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1586&q=80')] bg-cover bg-center bg-fixed opacity-30"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-pink-600/90 to-purple-600/90"></div>
         
@@ -562,7 +562,8 @@ const AboutUs = () => {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
+      <Footer />
     </div>
   );
 };
