@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Clock, Instagram, Facebook, Twitter, ChevronDown, Loader2 } from 'lucide-react';
-
+import Footer from '../components/Footer'
 const ContactUs = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -126,6 +126,7 @@ const ContactUs = () => {
   };
 
   return (
+    <>
     <div className="min-h-screen bg-gradient-to-b from-white to-pink-50/20">
       {/* Floating Rose Petals Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
@@ -737,7 +738,10 @@ const ContactUs = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      
     </div>
+    <Footer />
+    </>
   );
 };
 

@@ -12,17 +12,14 @@ const ProductsPage = () => {
       try {
         const response = await fetch('http://localhost:8080/api/products/all1');
         const data = await response.json();
-
-        if (!response.ok) {
+        if (!response.ok || !data.success) {
           throw new Error(data.message || 'Failed to fetch products');
         }
-
-        // Check if data is an array, if not convert it to array
-        const productsArray = Array.isArray(data) ? data : [data];
+        const productsArray = Array.isArray(data.products) ? data.products : [];
         setProducts(productsArray);
-        setLoading(false);
       } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -49,7 +46,7 @@ const ProductsPage = () => {
         </div>
       </div>
 
-      {/* Table Card */}
+      {/* Table */}
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
         <div className="p-6">
           {loading ? (
@@ -75,52 +72,42 @@ const ProductsPage = () => {
               <table className="min-w-full divide-y divide-rose-200">
                 <thead className="bg-rose-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">
-                      Title
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">
-                      Description
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">
-                      Price
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">
-                      Category
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">
-                      Subcategory
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">
-                      Added On
-                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Title</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Description</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Price</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Image</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Subcategory</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Added On</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-rose-200">
-                  {products.map((product) => (
-                    <tr
-                      key={product._id}
-                      className="hover:bg-rose-50 transition-all duration-200"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {product.title}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">
-                        {product.description}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ${product.price?.toFixed(2) || '0.00'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {product.category}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {product.subcategory}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {product.createdAt ? formatDate(product.createdAt) : 'N/A'}
-                      </td>
-                    </tr>
-                  ))}
+                  {products.map((product) => {
+                    const imageSrc =
+                      product.image && product.image.data
+                        ? `data:${product.image.contentType};base64,${product.image.data}`
+                        : null;
+
+                    return (
+                      <tr key={product.id} className="hover:bg-rose-50 transition-all duration-200">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{product.title}</td>
+                        <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{product.description}</td>
+                        <td className="px-6 py-4 text-sm text-gray-900">${product.price?.toFixed(2) || '0.00'}</td>
+                        <td className="px-6 py-4 text-sm">
+                          {imageSrc ? (
+                            <img src={imageSrc} alt="product" className="h-12 w-12 object-cover rounded" />
+                          ) : (
+                            <span className="text-gray-400 text-sm">No image</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">{product.category}</td>
+                        <td className="px-6 py-4 text-sm text-gray-900">{product.subcategory}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {product.createdAt ? formatDate(product.createdAt) : 'N/A'}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
