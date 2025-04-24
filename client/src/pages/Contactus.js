@@ -12,6 +12,7 @@ const ContactUs = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(null); // New state for error messages
   const [activeFaq, setActiveFaq] = useState(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
@@ -58,6 +59,24 @@ const ContactUs = () => {
     }
   };
 
+  // New modal animation variants
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { 
+        duration: 0.3,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.8,
+      transition: { duration: 0.2 }
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -66,23 +85,40 @@ const ContactUs = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+    setSubmitError(null);
+
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-      
-      setTimeout(() => setSubmitSuccess(false), 5000);
-    }, 2000);
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSubmitSuccess(true);
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+        // Auto-close the modal after 5 seconds
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      } else {
+        throw new Error(data.message || 'Failed to send message');
+      }
+    } catch (error) {
+      setSubmitError(error.message || 'An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const toggleFaq = (index) => {
@@ -209,24 +245,6 @@ const ContactUs = () => {
                 </span>
               </motion.h2>
               
-              <AnimatePresence>
-                {submitSuccess && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mb-8 overflow-hidden"
-                  >
-                    <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      Thank you! Your message has been sent successfully.
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
               <form onSubmit={handleSubmit}>
                 <motion.div 
                   variants={fadeInUp}
@@ -311,6 +329,20 @@ const ContactUs = () => {
                     placeholder="Tell us how we can help..."
                   ></textarea>
                 </motion.div>
+
+                {submitError && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    {submitError}
+                  </motion.div>
+                )}
 
                 <motion.button
                   type="submit"
@@ -654,6 +686,57 @@ const ContactUs = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Success Popup Modal */}
+      <AnimatePresence>
+        {submitSuccess && (
+          <motion.div
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm"
+          >
+            <motion.div
+              className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl border border-pink-100/50 relative overflow-hidden"
+              whileHover={{ scale: 1.02 }}
+            >
+              {/* Decorative background elements */}
+              <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-pink-100/20 blur-xl"></div>
+              <div className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-rose-100/20 blur-xl"></div>
+
+              <div className="text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 10 }}
+                  className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-pink-600 to-rose-500 text-white"
+                >
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </motion.div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-500">
+                    Message Sent!
+                  </span>
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Thank you for reaching out. We'll get back to you soon!
+                </p>
+                <motion.button
+                  onClick={() => setSubmitSuccess(false)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-700 hover:to-rose-600 text-white font-semibold py-2 px-6 rounded-xl shadow-lg transition-all duration-300"
+                >
+                  Close
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

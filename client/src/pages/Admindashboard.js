@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { FiHome, FiPlus, FiUsers, FiInbox, FiSettings, FiPieChart, FiLogOut, FiChevronLeft, FiChevronRight, FiMenu } from 'react-icons/fi';
 
 const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [activeItem, setActiveItem] = useState('dashboard');
+  const location = useLocation(); // To determine the current route
 
   // Check if mobile view
   useEffect(() => {
@@ -31,10 +32,234 @@ const AdminDashboard = () => {
     { name: 'Dashboard', icon: <FiHome className="w-5 h-5" />, path: '/admin' },
     { name: 'Add Product', icon: <FiPlus className="w-5 h-5" />, path: '/admin/addproduct' },
     { name: 'Products', icon: <FiPieChart className="w-5 h-5" />, path: '/admin/products' },
-    { name: 'Users', icon: <FiUsers className="w-5 h-5" />, path: '/admin/users' },
+    { name: 'Users', icon: <FiUsers className="w-5 h-5" />, path: '/admin/users' }, // Fixed path from /admin/user to /admin/users
     { name: 'Queries', icon: <FiInbox className="w-5 h-5" />, path: '/admin/queries' },
     { name: 'Settings', icon: <FiSettings className="w-5 h-5" />, path: '/admin/settings' },
   ];
+
+  // Dashboard content to be rendered only on /admin
+  const DashboardContent = () => (
+    <>
+      {/* Welcome Banner */}
+      <div className="mb-8">
+        <div className="bg-gradient-to-r from-rose-500 to-rose-600 rounded-2xl p-6 shadow-lg overflow-hidden relative">
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full"></div>
+          <div className="absolute -right-5 -top-5 w-20 h-20 bg-white/20 rounded-full"></div>
+          <div className="relative z-10">
+            <h1 className="text-3xl font-bold text-white">Welcome back, Admin!</h1>
+            <p className="text-rose-100 mt-2 max-w-lg">
+              Here's what's happening with your store today. You have 12 new orders and 3 customer messages waiting.
+            </p>
+            <button className="mt-4 bg-white text-rose-600 px-6 py-2 rounded-full font-medium hover:bg-rose-50 transition-all duration-200 shadow-md hover:shadow-lg">
+              View Recent Activity
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Total Products */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Total Products</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">1,248</p>
+                <p className="text-sm text-rose-500 mt-2 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+                  </svg>
+                  +12.5% from last month
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
+                <FiPieChart className="w-8 h-8" />
+              </div>
+            </div>
+            <div className="mt-6">
+              <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full transition-all duration-500" 
+                  style={{ width: '70%' }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Total Users */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Total Users</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">5,342</p>
+                <p className="text-sm text-rose-500 mt-2 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+                  </svg>
+                  +24.3% from last month
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
+                <FiUsers className="w-8 h-8" />
+              </div>
+            </div>
+            <div className="mt-6">
+              <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full transition-all duration-500" 
+                  style={{ width: '85%' }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Pending Queries */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Pending Queries</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">24</p>
+                <p className="text-sm text-rose-500 mt-2 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1v-5a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586l-4.293-4.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clipRule="evenodd" />
+                  </svg>
+                  -5 from yesterday
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
+                <FiInbox className="w-8 h-8" />
+              </div>
+            </div>
+            <div className="mt-6">
+              <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full transition-all duration-500" 
+                  style={{ width: '30%' }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Revenue */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Revenue</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">$24,780</p>
+                <p className="text-sm text-rose-500 mt-2 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+                  </svg>
+                  +18.7% from last month
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-6">
+              <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full transition-all duration-500" 
+                  style={{ width: '65%' }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity & Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Recent Orders */}
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-800">Recent Orders</h2>
+              <Link to="/admin/orders" className="text-rose-600 hover:text-rose-700 text-sm font-medium">
+                View All
+              </Link>
+            </div>
+            
+            <div className="space-y-4">
+              {[1, 2, 3, 4].map((order) => (
+                <div key={order} className="flex items-center p-3 hover:bg-rose-50 rounded-lg transition-colors duration-200">
+                  <div className="flex-shrink-0 w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center text-rose-600">
+                    #{order + 1042}
+                  </div>
+                  <div className="ml-4 flex-1">
+                    <p className="text-sm font-medium text-gray-900">Customer {order}</p>
+                    <p className="text-sm text-gray-500">${(120 + order * 25).toFixed(2)} • {['Processing', 'Shipped', 'Delivered'][order % 3]}</p>
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {new Date(Date.now() - order * 86400000).toLocaleDateString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        {/* Quick Actions */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-6">Quick Actions</h2>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <Link 
+                to="/admin/addproduct" 
+                className="p-4 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors duration-200 flex flex-col items-center justify-center text-center"
+              >
+                <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2">
+                  <FiPlus className="w-5 h-5" />
+                </div>
+                <span className="text-sm font-medium text-gray-800">Add Product</span>
+              </Link>
+              
+              <Link 
+                to="/admin/users" 
+                className="p-4 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors duration-200 flex flex-col items-center justify-center text-center"
+              >
+                <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2">
+                  <FiUsers className="w-5 h-5" />
+                </div>
+                <span className="text-sm font-medium text-gray-800">Manage Users</span>
+              </Link>
+              
+              <Link 
+                to="/admin/queries" 
+                className="p-4 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors duration-200 flex flex-col items-center justify-center text-center"
+              >
+                <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2">
+                  <FiInbox className="w-5 h-5" />
+                </div>
+                <span className="text-sm font-medium text-gray-800">Customer Queries</span>
+              </Link>
+              
+              <Link 
+                to="/admin/settings" 
+                className="p-4 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors duration-200 flex flex-col items-center justify-center text-center"
+              >
+                <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2">
+                  <FiSettings className="w-5 h-5" />
+                </div>
+                <span className="text-sm font-medium text-gray-800">Settings</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <div className="flex h-screen bg-rose-50 overflow-hidden">
@@ -206,229 +431,8 @@ const AdminDashboard = () => {
 
         <main className="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-rose-50 to-rose-100">
           <div className="max-w-7xl mx-auto w-full">
-            {/* Welcome Banner */}
-            <div className="mb-8">
-              <div className="bg-gradient-to-r from-rose-500 to-rose-600 rounded-2xl p-6 shadow-lg overflow-hidden relative">
-                <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full"></div>
-                <div className="absolute -right-5 -top-5 w-20 h-20 bg-white/20 rounded-full"></div>
-                <div className="relative z-10">
-                  <h1 className="text-3xl font-bold text-white">Welcome back, Admin!</h1>
-                  <p className="text-rose-100 mt-2 max-w-lg">
-                    Here's what's happening with your store today. You have 12 new orders and 3 customer messages waiting.
-                  </p>
-                  <button className="mt-4 bg-white text-rose-600 px-6 py-2 rounded-full font-medium hover:bg-rose-50 transition-all duration-200 shadow-md hover:shadow-lg">
-                    View Recent Activity
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {/* Total Products */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
-                <div className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Total Products</p>
-                      <p className="text-3xl font-bold text-gray-900 mt-1">1,248</p>
-                      <p className="text-sm text-rose-500 mt-2 flex items-center">
-                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-                        </svg>
-                        +12.5% from last month
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
-                      <FiPieChart className="w-8 h-8" />
-                    </div>
-                  </div>
-                  <div className="mt-6">
-                    <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full transition-all duration-500" 
-                        style={{ width: '70%' }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Total Users */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
-                <div className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Total Users</p>
-                      <p className="text-3xl font-bold text-gray-900 mt-1">5,342</p>
-                      <p className="text-sm text-rose-500 mt-2 flex items-center">
-                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-                        </svg>
-                        +24.3% from last month
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
-                      <FiUsers className="w-8 h-8" />
-                    </div>
-                  </div>
-                  <div className="mt-6">
-                    <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full transition-all duration-500" 
-                        style={{ width: '85%' }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Pending Queries */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
-                <div className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Pending Queries</p>
-                      <p className="text-3xl font-bold text-gray-900 mt-1">24</p>
-                      <p className="text-sm text-rose-500 mt-2 flex items-center">
-                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1v-5a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586l-4.293-4.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clipRule="evenodd" />
-                        </svg>
-                        -5 from yesterday
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
-                      <FiInbox className="w-8 h-8" />
-                    </div>
-                  </div>
-                  <div className="mt-6">
-                    <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full transition-all duration-500" 
-                        style={{ width: '30%' }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Revenue */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
-                <div className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Revenue</p>
-                      <p className="text-3xl font-bold text-gray-900 mt-1">$24,780</p>
-                      <p className="text-sm text-rose-500 mt-2 flex items-center">
-                        <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-                        </svg>
-                        +18.7% from last month
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-rose-100 text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="mt-6">
-                    <div className="h-2 bg-rose-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-rose-400 to-rose-600 rounded-full transition-all duration-500" 
-                        style={{ width: '65%' }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent Activity & Quick Actions */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-              {/* Recent Orders */}
-              <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg overflow-hidden">
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-gray-800">Recent Orders</h2>
-                    <Link to="/admin/orders" className="text-rose-600 hover:text-rose-700 text-sm font-medium">
-                      View All
-                    </Link>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    {[1, 2, 3, 4].map((order) => (
-                      <div key={order} className="flex items-center p-3 hover:bg-rose-50 rounded-lg transition-colors duration-200">
-                        <div className="flex-shrink-0 w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center text-rose-600">
-                          #{order + 1042}
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <p className="text-sm font-medium text-gray-900">Customer {order}</p>
-                          <p className="text-sm text-gray-500">${(120 + order * 25).toFixed(2)} • {['Processing', 'Shipped', 'Delivered'][order % 3]}</p>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {new Date(Date.now() - order * 86400000).toLocaleDateString()}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Quick Actions */}
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                <div className="p-6">
-                  <h2 className="text-xl font-bold text-gray-800 mb-6">Quick Actions</h2>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <Link 
-                      to="/admin/add-product" 
-                      className="p-4 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors duration-200 flex flex-col items-center justify-center text-center"
-                    >
-                      <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2">
-                        <FiPlus className="w-5 h-5" />
-                      </div>
-                      <span className="text-sm font-medium text-gray-800">Add Product</span>
-                    </Link>
-                    
-                    <Link 
-                      to="/admin/users" 
-                      className="p-4 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors duration-200 flex flex-col items-center justify-center text-center"
-                    >
-                      <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2">
-                        <FiUsers className="w-5 h-5" />
-                      </div>
-                      <span className="text-sm font-medium text-gray-800">Manage Users</span>
-                    </Link>
-                    
-                    <Link 
-                      to="/admin/queries" 
-                      className="p-4 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors duration-200 flex flex-col items-center justify-center text-center"
-                    >
-                      <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2">
-                        <FiInbox className="w-5 h-5" />
-                      </div>
-                      <span className="text-sm font-medium text-gray-800">Customer Queries</span>
-                    </Link>
-                    
-                    <Link 
-                      to="/admin/settings" 
-                      className="p-4 bg-rose-50 rounded-xl hover:bg-rose-100 transition-colors duration-200 flex flex-col items-center justify-center text-center"
-                    >
-                      <div className="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-2">
-                        <FiSettings className="w-5 h-5" />
-                      </div>
-                      <span className="text-sm font-medium text-gray-800">Settings</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Main Content Area */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden p-6 mb-8">
-              <Outlet />
-            </div>
+            {/* Render DashboardContent only on exact /admin route, otherwise render Outlet */}
+            {location.pathname === '/admin' ? <DashboardContent /> : <Outlet />}
           </div>
         </main>    
       </div>

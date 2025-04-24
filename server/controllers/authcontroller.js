@@ -96,4 +96,31 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signup, login };
+const getAllUsers = async (req, res) => {
+  try {
+    // Fetch all users from the database
+    const users = await User.find().select('name email _id');
+
+    // Check if there are any users
+    if (!users || users.length === 0) {
+      return res.status(404).json({ success: false, message: 'No users found' });
+    }
+
+    // Map users to the desired response format
+    const userList = users.map(user => ({
+      id: user._id,
+      name: user.name,
+      email: user.email
+    }));
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Users retrieved successfully', 
+      users: userList 
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error retrieving users', error: error.message });
+  }
+};
+
+module.exports = { signup, login, getAllUsers };
