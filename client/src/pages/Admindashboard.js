@@ -6,6 +6,8 @@ const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [activeItem, setActiveItem] = useState('dashboard');
+  const [productCount, setProductCount] = useState(1248); // Initial placeholder for products
+  const [userCount, setUserCount] = useState(5342); // Initial placeholder for users
   const location = useLocation(); // To determine the current route
 
   // Check if mobile view
@@ -24,6 +26,44 @@ const AdminDashboard = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Fetch product count from API
+  useEffect(() => {
+    const fetchProductCount = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/products/count');
+        const data = await response.json();
+        if (data.success) {
+          setProductCount(data.totalProducts);
+        } else {
+          console.error('Failed to fetch product count:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching product count:', error.message);
+      }
+    };
+
+    fetchProductCount();
+  }, []);
+
+  // Fetch user count from API
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/getcount');
+        const data = await response.json();
+        if (data.success) {
+          setUserCount(data.totalUsers);
+        } else {
+          console.error('Failed to fetch user count:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching user count:', error.message);
+      }
+    };
+
+    fetchUserCount();
+  }, []);
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -32,7 +72,7 @@ const AdminDashboard = () => {
     { name: 'Dashboard', icon: <FiHome className="w-5 h-5" />, path: '/admin' },
     { name: 'Add Product', icon: <FiPlus className="w-5 h-5" />, path: '/admin/addproduct' },
     { name: 'Products', icon: <FiPieChart className="w-5 h-5" />, path: '/admin/products' },
-    { name: 'Users', icon: <FiUsers className="w-5 h-5" />, path: '/admin/users' }, // Fixed path from /admin/user to /admin/users
+    { name: 'Users', icon: <FiUsers className="w-5 h-5" />, path: '/admin/users' },
     { name: 'Queries', icon: <FiInbox className="w-5 h-5" />, path: '/admin/queries' },
     { name: 'Settings', icon: <FiSettings className="w-5 h-5" />, path: '/admin/settings' },
   ];
@@ -65,11 +105,11 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Total Products</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">1,248</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">{productCount.toLocaleString()}</p>
                 <p className="text-sm text-rose-500 mt-2 flex items-center">
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-                  </svg>
+                </svg>
                   +12.5% from last month
                 </p>
               </div>
@@ -94,7 +134,7 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Total Users</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">5,342</p>
+                <p className="text-3xl font-bold text-gray-900 mt-1">{userCount.toLocaleString()}</p>
                 <p className="text-sm text-rose-500 mt-2 flex items-center">
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
@@ -122,7 +162,7 @@ const AdminDashboard = () => {
           <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Pending Queries</p>
+                <p className="text-sm font-medium text-gray-500">Total Queries</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">24</p>
                 <p className="text-sm text-rose-500 mt-2 flex items-center">
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -357,7 +397,7 @@ const AdminDashboard = () => {
           {/* Logout/Settings */}
           <div className="p-4 border-t border-rose-400/30">
             <Link
-              to="/logout"
+              to="/adminlogin"
               className={`flex items-center p-3 rounded-lg transition-all duration-200 group
                 ${sidebarOpen ? 'justify-start space-x-3' : 'justify-center'}
                 text-rose-100 hover:bg-white/10 hover:text-white`}
@@ -420,7 +460,7 @@ const AdminDashboard = () => {
                   <Link to="/admin/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
                     Settings
                   </Link>
-                  <Link to="/logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
+                  <Link to="/adminlogin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors duration-200">
                     Logout
                   </Link>
                 </div>

@@ -18,7 +18,7 @@ const AdminLogin = () => {
 
     // Simulate async login (replace with your API call)
     setTimeout(() => {
-      if (username === 'taruna' || password === '123456') {
+      if (username === 'taruna' || password === 'taruna#4321') {
         setError('Please fill in all fields');
         setIsLoading(false);
         navigate('/admin');

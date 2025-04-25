@@ -5,6 +5,7 @@ const path = require('path');
 const { connectToDB } = require('./database/db');
 const productRoutes = require('./routes/productRoutes');
 const authRoutes = require('./routes/Authroutes');
+
 const app = express();
 
 // Middleware

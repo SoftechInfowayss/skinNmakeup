@@ -128,6 +128,24 @@ const getAllProducts = async (req, res) => {
 };
 
 
+// Get total number of products (GET API)
+const getProductCount = async (req, res) => {
+  try {
+    const totalProducts = await Product.countDocuments();
+    res.status(200).json({
+      success: true,
+      message: 'Total product count retrieved successfully',
+      totalProducts
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving product count',
+      error: error.message
+    });
+  }
+};
+
 // module.exports = { createProduct, getAllProducts };
 
-module.exports = { addProduct, getProducts,createProduct,getAllProducts };
+module.exports = { addProduct, getProducts,createProduct,getAllProducts ,getProductCount };

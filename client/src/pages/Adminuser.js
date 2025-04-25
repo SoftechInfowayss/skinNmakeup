@@ -12,6 +12,7 @@ const UsersPage = () => {
       try {
         const response = await fetch('http://localhost:8080/api/auth/getuser');
         const data = await response.json();
+        console.log('API Response:', data); // Debug log to inspect the response
 
         if (!data.success) {
           throw new Error(data.message || 'Failed to fetch users');
@@ -76,6 +77,9 @@ const UsersPage = () => {
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">
                       Email
                     </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">
+                      Password
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-rose-200">
@@ -92,6 +96,9 @@ const UsersPage = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {user.email}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {user.password || 'N/A'}
                       </td>
                     </tr>
                   ))}

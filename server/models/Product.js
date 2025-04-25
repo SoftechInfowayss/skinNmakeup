@@ -4,7 +4,7 @@ const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: String,
   price: { type: Number, required: true },
-  category: { type: String, enum: ['Hair', 'Makeup', 'Skincare', 'Fragrance'], required: true },
+  category: { type: String, required: true },
   subcategory: { type: String, required: true },
   image: {
     data: Buffer,
@@ -13,4 +13,5 @@ const productSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Product', productSchema);
+// Check if model already exists before defining it
+module.exports = mongoose.models.Product || mongoose.model('Product', productSchema);

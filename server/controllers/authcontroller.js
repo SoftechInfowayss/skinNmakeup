@@ -123,4 +123,24 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, getAllUsers };
+// Get total number of users (GET API)
+const getUserCount = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    res.status(200).json({
+      success: true,
+      message: 'Total user count retrieved successfully',
+      totalUsers
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving user count',
+      error: error.message
+    });
+  }
+};
+
+
+
+module.exports = { signup, login, getAllUsers ,getUserCount };
