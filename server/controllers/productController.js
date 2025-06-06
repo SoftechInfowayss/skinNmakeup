@@ -145,7 +145,42 @@ const getProductCount = async (req, res) => {
     });
   }
 };
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Check if the ID is provided
+    if (!id) {
+      return res.status(400).json({ success: false, message: 'Product ID is required' });
+    }
+
+    // Try to find the product
+    const product = await Product.findById(id);
+
+    // If product not found
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    // Delete the product
+    await Product.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Product deleted successfully',
+      deletedProduct: {
+        id: product._id,
+        title: product.title,
+        category: product.category,
+        subcategory: product.subcategory
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error deleting product', error: error.message });
+  }
+};
+
 
 // module.exports = { createProduct, getAllProducts };
 
-module.exports = { addProduct, getProducts,createProduct,getAllProducts ,getProductCount };
+module.exports = { addProduct, getProducts,createProduct,getAllProducts ,getProductCount ,deleteProduct};
