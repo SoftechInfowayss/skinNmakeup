@@ -10,6 +10,7 @@ import AdminAddProduct from './pages/Adminaddproduct';
 import Adminuser from './pages/Adminuser';
 import Adminqueries from './pages/Adminqueries';
 import Adminproduct from './pages/Adminproducts'
+import CategoriesPage from './pages/Categories';
 function Main() {
   return (
     <Router>
@@ -20,6 +21,7 @@ function Main() {
         <Route path="/contact" element={<Contactus />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/adminlogin" element={<AdminLogin />} />
+         <Route path="/categories" element={<CategoriesPage />} />
         
         {/* Admin routes */}
         <Route path="/admin/*" element={<AdminDashboard />}>
