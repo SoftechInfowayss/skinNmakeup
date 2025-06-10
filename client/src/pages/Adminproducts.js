@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiPackage } from 'react-icons/fi';
+import { FiPackage, FiTrash2 } from 'react-icons/fi';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -26,6 +26,23 @@ const ProductsPage = () => {
 
     fetchProducts();
   }, []);
+
+  // Handle product deletion
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/products/delete/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Failed to delete product');
+      }
+      // Update the product list by filtering out the deleted product
+      setProducts(products.filter((product) => product.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   // Format date to readable string
   const formatDate = (dateString) => {
@@ -79,6 +96,7 @@ const ProductsPage = () => {
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Category</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Subcategory</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Added On</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-rose-200">
@@ -104,6 +122,15 @@ const ProductsPage = () => {
                         <td className="px-6 py-4 text-sm text-gray-900">{product.subcategory}</td>
                         <td className="px-6 py-4 text-sm text-gray-500">
                           {product.createdAt ? formatDate(product.createdAt) : 'N/A'}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          <button
+                            onClick={() => handleDelete(product.id)}
+                            className="text-rose-600 hover:text-rose-800 transition-all duration-200"
+                            title="Delete Product"
+                          >
+                            <FiTrash2 className="w-5 h-5" />
+                          </button>
                         </td>
                       </tr>
                     );
