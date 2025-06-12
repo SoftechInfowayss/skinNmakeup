@@ -160,27 +160,28 @@ const CategoriesPage = () => {
       )}
 
       {/* Image */}
-      <div className="relative mb-4 w-full h-64 overflow-hidden rounded-lg">
-        <img
-          src={
-            product.image?.data && product.image?.contentType
-              ? `data:${product.image.contentType};base64,${
-                  typeof product.image.data === 'string'
-                    ? product.image.data
-                    : btoa(String.fromCharCode(...new Uint8Array(product.image.data)))
-                }`
-              : 'https://via.placeholder.com/300x200?text=No+Image'
-          }
-          alt={product.title || 'Product Image'}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/300x200?text=Image+Error';
-          }}
-          style={{ willChange: 'transform' }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      </div>
+     <div className="relative mb-4 w-full h-64 overflow-hidden rounded-lg group">
+  <img
+    src={
+      product.images?.[0]?.data && product.images?.[0]?.contentType
+        ? `data:${product.images[0].contentType};base64,${
+            typeof product.images[0].data === 'string'
+              ? product.images[0].data
+              : btoa(String.fromCharCode(...new Uint8Array(product.images[0].data)))
+          }`
+        : 'https://via.placeholder.com/300x200?text=No+Image'
+    }
+    alt={product.title || 'Product Image'}
+    loading="lazy"
+    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+    onError={(e) => {
+      e.target.src = 'https://via.placeholder.com/300x200?text=Image+Error';
+    }}
+    style={{ willChange: 'transform' }}
+  />
+  <div className="absolute inset-0 bg-gradient-to-t from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+
 
       {/* Content */}
       <div className="flex flex-col h-40">
