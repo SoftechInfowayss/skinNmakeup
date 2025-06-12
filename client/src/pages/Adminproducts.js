@@ -92,19 +92,31 @@ const ProductsPage = () => {
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Title</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Description</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Price</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Image</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider min-w-[200px]">Images</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Category</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Subcategory</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Quantity</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Added On</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-rose-600 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-rose-200">
                   {products.map((product) => {
-                    const imageSrc =
-                      product.image && product.image.data
-                        ? `data:${product.image.contentType};base64,${product.image.data}`
-                        : null;
+                    // Handle both old schema (image) and new schema (images)
+                    let imageSrcs = [];
+                    if (product.images && Array.isArray(product.images)) {
+                      // New schema: images array
+                      imageSrcs = product.images
+                        .map(image => 
+                          image && image.data
+                            ? `data:${image.contentType};base64,${image.data}`
+                            : null
+                        )
+                        .filter(src => src !== null);
+                    } else if (product.image && product.image.data) {
+                      // Old schema: single image field
+                      imageSrcs = [`data:${product.image.contentType};base64,${product.image.data}`];
+                    }
 
                     return (
                       <tr key={product.id} className="hover:bg-rose-50 transition-all duration-200">
@@ -112,14 +124,24 @@ const ProductsPage = () => {
                         <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{product.description}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">${product.price?.toFixed(2) || '0.00'}</td>
                         <td className="px-6 py-4 text-sm">
-                          {imageSrc ? (
-                            <img src={imageSrc} alt="product" className="h-12 w-12 object-cover rounded" />
+                          {imageSrcs.length > 0 ? (
+                            <div className="flex space-x-2">
+                              {imageSrcs.map((src, index) => (
+                                <img
+                                  key={index}
+                                  src={src}
+                                  alt={`product-${index}`}
+                                  className="h-12 w-12 object-cover rounded"
+                                />
+                              ))}
+                            </div>
                           ) : (
-                            <span className="text-gray-400 text-sm">No image</span>
+                            <span className="text-gray-400 text-sm">No images</span>
                           )}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">{product.category}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">{product.subcategory}</td>
+                        <td className="px-6 py-4 text-sm text-gray-900">{product.quantity || 0}</td>
                         <td className="px-6 py-4 text-sm text-gray-500">
                           {product.createdAt ? formatDate(product.createdAt) : 'N/A'}
                         </td>

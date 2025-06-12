@@ -7,14 +7,15 @@ const AdminAddProduct = () => {
     description: '',
     price: '',
     category: '',
-    subcategory: ''
+    subcategory: '',
+    quantity: ''
   });
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreviews, setImagePreviews] = useState([]); // Array for multiple images
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  const categories = ['Hair', 'Makeup', 'Skincare', 'Fragrance'];
+  const categories = ['Skincare', 'Makeup', 'Haircare', 'Fragrance'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,20 +26,25 @@ const AdminAddProduct = () => {
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagePreview({
-        file,
-        preview: URL.createObjectURL(file)
-      });
+    const files = Array.from(e.target.files);
+    if (imagePreviews.length + files.length > 3) {
+      setError('Maximum of 3 images allowed');
+      return;
     }
+
+    const newPreviews = files.map(file => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
+
+    setImagePreviews(prev => [...prev, ...newPreviews]);
   };
 
-  const removeImage = () => {
-    if (imagePreview) {
-      URL.revokeObjectURL(imagePreview.preview);
-      setImagePreview(null);
-    }
+  const removeImage = (index) => {
+    const updatedPreviews = [...imagePreviews];
+    URL.revokeObjectURL(updatedPreviews[index].preview);
+    updatedPreviews.splice(index, 1);
+    setImagePreviews(updatedPreviews);
   };
 
   const handleSubmit = async (e) => {
@@ -48,8 +54,8 @@ const AdminAddProduct = () => {
     setSuccess(false);
 
     // Validation
-    if (!product.title || !product.price || !product.category || !product.subcategory) {
-      setError('Title, price, category, and subcategory are required');
+    if (!product.title || !product.price || !product.category || !product.subcategory || !product.quantity) {
+      setError('Title, price, category, subcategory, and quantity are required');
       setIsLoading(false);
       return;
     }
@@ -60,8 +66,15 @@ const AdminAddProduct = () => {
       return;
     }
 
-    if (!imagePreview) {
-      setError('Product image is required');
+    if (imagePreviews.length === 0) {
+      setError('At least one product image is required');
+      setIsLoading(false);
+      return;
+    }
+
+    const parsedQuantity = parseInt(product.quantity);
+    if (isNaN(parsedQuantity) || parsedQuantity < 0) {
+      setError('Quantity must be a non-negative number');
       setIsLoading(false);
       return;
     }
@@ -73,7 +86,10 @@ const AdminAddProduct = () => {
       formData.append('price', product.price);
       formData.append('category', product.category);
       formData.append('subcategory', product.subcategory);
-      formData.append('image', imagePreview.file);
+      formData.append('quantity', product.quantity);
+      imagePreviews.forEach((image) => {
+        formData.append('images', image.file); // Use 'images' field name for multiple files
+      });
 
       const response = await fetch('http://localhost:8080/api/products/add1', {
         method: 'POST',
@@ -86,7 +102,6 @@ const AdminAddProduct = () => {
       }
 
       const result = await response.json();
-      console.log('Product added:', result);
       setSuccess(true);
       
       // Reset form
@@ -95,12 +110,13 @@ const AdminAddProduct = () => {
         description: '',
         price: '',
         category: '',
-        subcategory: ''
+        subcategory: '',
+        quantity: ''
       });
-      removeImage();
+      imagePreviews.forEach(image => URL.revokeObjectURL(image.preview));
+      setImagePreviews([]);
       
     } catch (err) {
-      console.error('Error:', err);
       setError(err.message || 'Failed to add product');
     } finally {
       setIsLoading(false);
@@ -216,6 +232,26 @@ const AdminAddProduct = () => {
                 </div>
               </div>
 
+              {/* Quantity */}
+              <div className="space-y-2">
+                <label htmlFor="quantity" className="block text-sm font-medium text-rose-700/90">
+                  Quantity <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative rounded-xl shadow-sm">
+                  <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    value={product.quantity}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    className="block w-full px-5 py-3.5 rounded-xl border-0 bg-white/90 shadow-sm ring-1 ring-inset ring-rose-200/70 placeholder:text-rose-300/80 focus:ring-2 focus:ring-inset focus:ring-rose-500/90 transition-all duration-300 hover:ring-rose-300 focus:shadow-md"
+                    placeholder="Enter quantity"
+                  />
+                </div>
+              </div>
+
               {/* Category Dropdown */}
               <div className="space-y-2">
                 <label htmlFor="category" className="block text-sm font-medium text-rose-700/90">
@@ -266,27 +302,28 @@ const AdminAddProduct = () => {
               {/* Image Upload */}
               <div className="md:col-span-2 space-y-2">
                 <label className="block text-sm font-medium text-rose-700/90">
-                  Product Image <span className="text-rose-500">*</span>
+                  Product Images (up to 3) <span className="text-rose-500">*</span>
                 </label>
-                <div className="flex items-center gap-6">
-                  {imagePreview ? (
-                    <div className="relative group transition-all duration-500 hover:scale-[1.02]">
+                <div className="flex flex-wrap items-center gap-6">
+                  {imagePreviews.map((image, index) => (
+                    <div key={index} className="relative group transition-all duration-500 hover:scale-[1.02]">
                       <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-rose-100/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       <img
-                        src={imagePreview.preview}
-                        alt="Preview"
+                        src={image.preview}
+                        alt={`Preview ${index + 1}`}
                         className="h-36 w-36 object-cover rounded-xl border-2 border-white shadow-lg ring-2 ring-rose-200/50"
                       />
                       <button
                         type="button"
-                        onClick={removeImage}
+                        onClick={() => removeImage(index)}
                         className="absolute -top-3 -right-3 bg-white p-2 rounded-full shadow-md text-rose-600 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-rose-50 hover:scale-110"
                       >
                         <FiX className="h-4 w-4" />
                       </button>
                     </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center w-full h-36 rounded-xl border-2 border-dashed border-rose-300/70 hover:border-rose-400 cursor-pointer transition-all duration-500 hover:bg-white/50 group">
+                  ))}
+                  {imagePreviews.length < 3 && (
+                    <label className="flex flex-col items-center justify-center w-36 h-36 rounded-xl border-2 border-dashed border-rose-300/70 hover:border-rose-400 cursor-pointer transition-all duration-500 hover:bg-white/50 group">
                       <div className="flex flex-col items-center justify-center pt-6 pb-7">
                         <div className="p-3 bg-rose-100/50 rounded-full mb-3 group-hover:bg-rose-200/50 transition-colors duration-300">
                           <FiPlus className="w-6 h-6 text-rose-500 group-hover:text-rose-600 transition-colors duration-300" />
@@ -302,8 +339,8 @@ const AdminAddProduct = () => {
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
+                        multiple
                         className="hidden"
-                        required
                       />
                     </label>
                   )}
