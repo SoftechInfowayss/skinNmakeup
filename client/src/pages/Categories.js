@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShoppingCart, Filter, X, Star, Heart, Eye } from 'lucide-react';
+import { Search, ShoppingCart, Filter, X, Star, Heart, Eye, ArrowLeft } from 'lucide-react';
 
 // Main CategoriesPage component
-const CategoriesPage = () => {
-  // State management
+const CategoriesPage = ({ initialCategory, onBack }) => {
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('default');
@@ -64,7 +63,7 @@ const CategoriesPage = () => {
   const filteredProducts = useMemo(() => {
     let result = products;
     if (selectedCategory !== 'all') {
-      result = result.filter(product => product && product.category === selectedCategory);
+      result = result.filter(product => product && product.category.toLowerCase() === selectedCategory.toLowerCase());
     }
     if (selectedSubcategory !== 'all') {
       result = result.filter(product => product && product.subcategory === selectedSubcategory);
@@ -144,7 +143,7 @@ const CategoriesPage = () => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
-      className="group relative bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100/50 overflow-hidden"
+      className={`group relative bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100/50 overflow-hidden ${product.quantity === 0 ? 'opacity-75' : ''}`}
       style={{ willChange: 'transform, opacity' }}
     >
       {/* Badges */}
@@ -158,30 +157,34 @@ const CategoriesPage = () => {
           New
         </span>
       )}
+      {product.quantity === 0 && (
+        <span className="absolute top-4 right-4 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full z-10">
+          Unavailable
+        </span>
+      )}
 
       {/* Image */}
-     <div className="relative mb-4 w-full h-64 overflow-hidden rounded-lg group">
-  <img
-    src={
-      product.images?.[0]?.data && product.images?.[0]?.contentType
-        ? `data:${product.images[0].contentType};base64,${
-            typeof product.images[0].data === 'string'
-              ? product.images[0].data
-              : btoa(String.fromCharCode(...new Uint8Array(product.images[0].data)))
-          }`
-        : 'https://via.placeholder.com/300x200?text=No+Image'
-    }
-    alt={product.title || 'Product Image'}
-    loading="lazy"
-    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-    onError={(e) => {
-      e.target.src = 'https://via.placeholder.com/300x200?text=Image+Error';
-    }}
-    style={{ willChange: 'transform' }}
-  />
-  <div className="absolute inset-0 bg-gradient-to-t from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-</div>
-
+      <div className="relative mb-4 w-full h-64 overflow-hidden rounded-lg">
+        <img
+          src={
+            product.images?.[0]?.data && product.images?.[0]?.contentType
+              ? `data:${product.images[0].contentType};base64,${
+                  typeof product.images[0].data === 'string'
+                    ? product.images[0].data
+                    : btoa(String.fromCharCode(...new Uint8Array(product.images[0].data)))
+                }`
+              : 'https://via.placeholder.com/300x200?text=No+Image'
+          }
+          alt={product.title || 'Product Image'}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/300x200?text=Image+Error';
+          }}
+          style={{ willChange: 'transform' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </div>
 
       {/* Content */}
       <div className="flex flex-col h-40">
@@ -214,10 +217,15 @@ const CategoriesPage = () => {
       {/* Actions */}
       <div className="mt-4 flex gap-2">
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex-1 bg-pink-600 text-white py-2 rounded-full flex items-center justify-center gap-2 text-sm font-medium transition-colors hover:bg-pink-700"
-          onClick={() => addToCart(product.id)}
+          whileHover={{ scale: product.quantity > 0 ? 1.05 : 1 }}
+          whileTap={{ scale: product.quantity > 0 ? 0.95 : 1 }}
+          className={`flex-1 py-2 rounded-full flex items-center justify-center gap-2 text-sm font-medium transition-colors ${
+            product.quantity > 0
+              ? 'bg-pink-600 text-white hover:bg-pink-700'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+          onClick={() => product.quantity > 0 && addToCart(product.id)}
+          disabled={product.quantity === 0}
           aria-label={`Add ${product.title} to cart`}
         >
           <ShoppingCart size={16} />
@@ -260,32 +268,6 @@ const CategoriesPage = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Header */}
-      {/* <header className="bg-pink-600 text-white py-4 shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto max-w-7xl px-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold tracking-tight">Skin Makeup</h1>
-          <nav className="hidden md:flex space-x-6">
-            <a href="/" className="hover:text-pink-200 transition-colors">Home</a>
-            <a href="/categories" className="font-semibold text-pink-100">Categories</a>
-            <a href="/cart" className="hover:text-pink-200 relative transition-colors">
-              Cart
-              {cart.length > 0 && (
-                <span className="absolute -top-2 -right-4 bg-pink-800 text-white text-xs rounded-full px-2 py-1">
-                  {cart.length}
-                </span>
-              )}
-            </a>
-          </nav>
-          <button
-            className="md:hidden text-white"
-            onClick={() => setIsFilterOpen(true)}
-            aria-label="Open filters"
-          >
-            <Filter size={24} />
-          </button>
-        </div>
-      </header> */}
 
       {/* Mobile Filter Sidebar */}
       <AnimatePresence>
@@ -492,9 +474,24 @@ const CategoriesPage = () => {
             className="mb-8"
           >
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-              <h1 className="text-3xl md:text-4xl font-bold text-pink-800">
-                Explore Our Makeup Collection
-              </h1>
+              <div className="flex items-center gap-4">
+                {initialCategory && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={onBack}
+                    className="p-2 rounded-full bg-pink-100 text-pink-600 hover:bg-pink-200 transition-colors"
+                    aria-label="Back to categories"
+                  >
+                    <ArrowLeft size={20} />
+                  </motion.button>
+                )}
+                <h1 className="text-3xl md:text-4xl font-bold text-pink-800">
+                  {selectedCategory === 'all' 
+                    ? 'Explore Our Makeup Collection' 
+                    : `Explore ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Collection`}
+                </h1>
+              </div>
               <div className="relative w-full sm:w-64">
                 <input
                   type="text"
@@ -506,7 +503,11 @@ const CategoriesPage = () => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-pink-400" size={20} />
               </div>
             </div>
-            <p className="text-gray-600 mt-2">Discover your perfect beauty essentials</p>
+            <p className="text-gray-600 mt-2">
+              {selectedCategory === 'all' 
+                ? 'Discover your perfect beauty essentials' 
+                : `Browse our curated ${selectedCategory} products`}
+            </p>
           </motion.div>
 
           {loading ? (
