@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingCart, Filter, X, Star, Heart, Eye, ArrowLeft } from 'lucide-react';
@@ -20,6 +21,8 @@ const CategoriesPage = ({ initialCategory, onBack }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const productsPerPage = 12;
+
+  const navigate = useNavigate(); // Hook for navigation
 
   // Fetch products from API
   const fetchProducts = useCallback(async () => {
@@ -126,6 +129,11 @@ const CategoriesPage = ({ initialCategory, onBack }) => {
     );
   }, []);
 
+  // Navigate to Product Detail Page
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
   // Shimmer loading component
   const ShimmerCard = () => (
     <div className="bg-white/90 p-6 rounded-2xl shadow-lg animate-pulse">
@@ -143,8 +151,9 @@ const CategoriesPage = ({ initialCategory, onBack }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
-      className={`group relative bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100/50 overflow-hidden ${product.quantity === 0 ? 'opacity-75' : ''}`}
+      className={`group relative bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100/50 overflow-hidden cursor-pointer ${product.quantity === 0 ? 'opacity-75' : ''}`}
       style={{ willChange: 'transform, opacity' }}
+      onClick={() => handleProductClick(product.id)} // Navigate to product detail page
     >
       {/* Badges */}
       {product.price < 20 && (
@@ -215,7 +224,7 @@ const CategoriesPage = ({ initialCategory, onBack }) => {
       </div>
 
       {/* Actions */}
-      <div className="mt-4 flex gap-2">
+      <div className="mt-4 flex gap-2" onClick={(e) => e.stopPropagation()}>
         <motion.button
           whileHover={{ scale: product.quantity > 0 ? 1.05 : 1 }}
           whileTap={{ scale: product.quantity > 0 ? 0.95 : 1 }}

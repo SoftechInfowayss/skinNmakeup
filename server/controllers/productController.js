@@ -281,5 +281,58 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error deleting product', error: error.message });
   }
 };
+const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the product ID from the request parameters
 
-module.exports = { addProduct, getProducts, createProduct, getAllProducts, getProductCount, deleteProduct };
+    // Find the product by ID
+    const product = await Product.findById(id);
+
+    // Check if the product exists
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found',
+      });
+    }
+
+    // Transform the product data to match the format of getAllProducts
+    const productData = {
+      id: product._id,
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      category: product.category,
+      subcategory: product.subcategory,
+      image: product.image && product.image.data
+        ? {
+            contentType: product.image.contentType,
+            data: product.image.data.toString('base64')
+          }
+        : null,
+      images: product.images && Array.isArray(product.images)
+        ? product.images.map(image => ({
+            contentType: image.contentType,
+            data: image.data.toString('base64')
+          }))
+        : [],
+      quantity: product.quantity,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt
+    };
+
+    // Return the product data
+    res.status(200).json({
+      success: true,
+      message: 'Product retrieved successfully',
+      product: productData
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving product',
+      error: error.message
+    });
+  }
+};
+module.exports = { addProduct, getProducts, createProduct, getAllProducts, getProductCount, deleteProduct ,getProductById};

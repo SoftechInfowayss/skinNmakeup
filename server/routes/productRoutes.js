@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { addProduct, getProducts, createProduct, getAllProducts, getProductCount, deleteProduct } = require('../controllers/productController');
+const { addProduct, getProducts, createProduct, getAllProducts, getProductCount, deleteProduct,getProductById } = require('../controllers/productController');
 const multer = require('multer');
 
 // Configure Multer for multiple file uploads
@@ -25,5 +25,6 @@ router.post('/add1', upload.array('images', 3), createProduct); // Updated to ha
 router.get('/all1', getAllProducts);
 router.get('/count', getProductCount);
 router.delete('/delete/:id', deleteProduct);
+router.get('/product/:id', getProductById);
 
 module.exports = router;
