@@ -9,23 +9,14 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit per file
   fileFilter: (req, file, cb) => {
-    const allowedTypes = [
-      'image/jpeg',
-      'image/png',
-      'image/gif',
-      'image/webp',
-      'image/avif',
-      'image/svg+xml',
-      'image/jpg'
-    ];
-
-    if (allowedTypes.includes(file.mimetype)) {
+    const filetypes = /jpeg|jpg|png|gif|AVIF/;
+    const mimetype = filetypes.test(file.mimetype);
+    if (mimetype) {
       return cb(null, true);
     }
-    cb(new Error('Only image files (JPG, PNG, GIF, WebP, AVIF, SVG) are allowed'));
+    cb(new Error('Only JPEG, PNG, and GIF images are allowed'));
   }
 });
-
 
 // Routes
 router.post('/add', upload.array('images', 3), addProduct); // Updated to handle multiple images
