@@ -24,6 +24,7 @@ function Main() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/adminlogin" element={<AdminLogin />} />
          <Route path="/categories" element={<Categorieshome />} />
+           <Route path="/categories/:id" element={<CategoriesPage />} />
          <Route path="/product/:id" element={<ProductDetailPage />} />
         
         {/* Admin routes */}
