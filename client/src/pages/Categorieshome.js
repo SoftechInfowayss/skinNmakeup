@@ -5,6 +5,7 @@ import { Star } from 'lucide-react'
 import { ArrowRight, Sparkles } from 'lucide-react';
 import CategoriesPage from './Categories'; // Importing the previous CategoriesPage component
 import CatHeroSection from '../components/CategoryHero';
+import { useNavigate } from 'react-router-dom';
 
 // Sample category data with images (replace with actual image URLs in a real app)
 const TypewriterText = ({ text, delay }) => {
@@ -60,6 +61,7 @@ const categories = [
 ];
 
 const CategoriesHome = () => {
+  const navigate=useNavigate();
    const { scrollY } = useScroll();
   const yTransform = useTransform(scrollY, [0, 300], [0, -50]); // Parallax effect
 
@@ -73,7 +75,7 @@ const CategoriesHome = () => {
 
   // If a category is selected, render the CategoriesPage with the selected category
   if (selectedCategory) {
-    return <CategoriesPage initialCategory={selectedCategory} />;
+    return <CategoriesPage initialCategory={selectedCategory} onBack={()=>{navigate('/categories')}}/>;
   }
 
   return (

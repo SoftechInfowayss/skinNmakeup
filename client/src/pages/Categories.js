@@ -13,7 +13,7 @@ const CategoriesPage = ({ initialCategory, onBack }) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('default');
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
   const [currentPage, setCurrentPage] = useState(1);
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
@@ -29,7 +29,7 @@ const CategoriesPage = ({ initialCategory, onBack }) => {
     setLoading(true);
     try {
       const response = await axios.get('http://localhost:8080/api/products/all1', {
-        timeout: 5000,
+        // timeout: 5000,
       });
       const fetchedProducts = Array.isArray(response.data.products) ? response.data.products : [];
       setProducts(fetchedProducts);
