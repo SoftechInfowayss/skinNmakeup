@@ -362,7 +362,7 @@ const CategoriesPage = ({ initialCategory, onBack }) => {
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max="10000"
                 value={priceRange[1]}
                 onChange={(e) => {
                   setPriceRange([0, parseInt(e.target.value)]);
@@ -460,7 +460,7 @@ const CategoriesPage = ({ initialCategory, onBack }) => {
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max="10000"
                 value={priceRange[1]}
                 onChange={(e) => {
                   setPriceRange([0, parseInt(e.target.value)]);

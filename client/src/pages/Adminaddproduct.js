@@ -91,7 +91,7 @@ const AdminAddProduct = () => {
         formData.append('images', image.file); // Use 'images' field name for multiple files
       });
 
-      const response = await fetch('http://localhost:8080/api/products/add1', {
+      const response = await fetch('http://localhost:8080/api/products/add', {
         method: 'POST',
         body: formData
       });

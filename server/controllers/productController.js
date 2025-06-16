@@ -17,6 +17,36 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Quantity must be a non-negative number' });
     }
 
+    // Check if the product already exists
+    const existingProduct = await Product.findOne({ title, description, category, subcategory });
+
+    if (existingProduct) {
+      // If product exists, update the quantity only
+      existingProduct.quantity += parsedQuantity;
+      await existingProduct.save();
+
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Product already exists. Quantity updated.', 
+        product: {
+          id: existingProduct._id,
+          title: existingProduct.title,
+          description: existingProduct.description,
+          price: existingProduct.price,
+          category: existingProduct.category,
+          subcategory: existingProduct.subcategory,
+          images: existingProduct.images.map(image => ({
+            contentType: image.contentType,
+            data: image.data.toString('base64')
+          })),
+          quantity: existingProduct.quantity,
+          createdAt: existingProduct.createdAt,
+          updatedAt: existingProduct.updatedAt
+        }
+      });
+    }
+
+    // If product does not exist, create new one
     const newProduct = new Product({
       title,
       description,
@@ -35,13 +65,14 @@ const addProduct = async (req, res) => {
         contentType: file.mimetype
       }));
     } else {
-      return res.status(400).json({ success: false, message: 'At least one image is required' });
+      return res.status(400).json({ success: false, message: 'At least one image is required for new products' });
     }
 
     await newProduct.save();
+
     res.status(201).json({ 
       success: true, 
-      message: 'Product added', 
+      message: 'New product added successfully', 
       product: {
         id: newProduct._id,
         title: newProduct.title,
@@ -58,6 +89,7 @@ const addProduct = async (req, res) => {
         updatedAt: newProduct.updatedAt
       }
     });
+
   } catch (error) {
     if (error instanceof multer.MulterError) {
       if (error.code === 'LIMIT_UNEXPECTED_FILE') {
@@ -68,9 +100,11 @@ const addProduct = async (req, res) => {
       }
       return res.status(400).json({ success: false, message: `Multer error: ${error.message}` });
     }
+
     res.status(500).json({ success: false, message: 'Error adding product', error: error.message });
   }
 };
+
 
 // Get all products (GET API - Simple Version)
 const getProducts = async (req, res) => {
