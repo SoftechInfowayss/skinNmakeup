@@ -79,7 +79,7 @@ const AuthPage = () => {
         localStorage.setItem('token', data.token);
         
         if (isLogin) {
-          navigate('/home'); // Navigate to home page only for login
+         navigate(`/user?email=${encodeURIComponent(formData.email)}`);// Navigate to home page only for login
         } else {
           // Show success popup for signup
           setShowSuccessPopup(true);

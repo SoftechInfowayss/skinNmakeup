@@ -141,6 +141,40 @@ const getUserCount = async (req, res) => {
   }
 };
 
+const getUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    // Check if email is provided
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required' });
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ email }).select('name email _id');
+
+    // If user not found
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Format the response
+    const userDetails = {
+      id: user._id,
+      name: user.name,
+      email: user.email
+    };
+
+    res.status(200).json({
+      success: true,
+      message: 'User retrieved successfully',
+      user: userDetails
+    });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error retrieving user', error: error.message });
+  }
+};
 
 
-module.exports = { signup, login, getAllUsers ,getUserCount };
+module.exports = { signup, login, getAllUsers ,getUserCount,getUserByEmail };

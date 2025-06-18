@@ -13,6 +13,7 @@ import Adminproduct from './pages/Adminproducts'
 import CategoriesPage from './pages/Categories';
 import Categorieshome from './pages/Categorieshome';
 import ProductDetailPage from './pages/ProductDetails';
+import UserDashboard from './pages/UserDash';
 function Main() {
   return (
     <Router>
@@ -26,6 +27,7 @@ function Main() {
          <Route path="/categories" element={<Categorieshome />} />
            <Route path="/categories/:id" element={<CategoriesPage />} />
          <Route path="/product/:id" element={<ProductDetailPage />} />
+         <Route path='/user' element={<UserDashboard />}/>
         
         {/* Admin routes */}
         <Route path="/admin/*" element={<AdminDashboard />}>
