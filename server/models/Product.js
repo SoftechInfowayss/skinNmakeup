@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
     type: String, 
     required: true,
     trim: true,
-    enum: ['Skincare', 'Makeup', 'Haircare', 'Fragrance'] // Add more categories as needed
+    enum: ['Skincare', 'Makeup', 'Haircare', 'Fragrance'] // Extend as needed
   },
   subcategory: { 
     type: String, 
@@ -37,7 +37,7 @@ const productSchema = new mongoose.Schema({
     contentType: { 
       type: String,
       required: true,
-      enum: ['image/jpeg', 'image/png', 'image/gif'] // Supported image types
+      enum: ['image/jpeg', 'image/png', 'image/gif'] 
     }
   }],
   quantity: { 
@@ -51,20 +51,17 @@ const productSchema = new mongoose.Schema({
     default: Date.now 
   }
 }, {
-  // Add timestamps for automatic createdAt and updatedAt fields
-  timestamps: true,
-  // Ensure the images array doesn't exceed 3 items
-  validate: {
-    validator: function(v) {
-      return this.images.length <= 3;
-    },
-    message: 'A product can have a maximum of 3 images.'
-  }
+  timestamps: true // automatically adds `createdAt` and `updatedAt`
 });
 
-// Add indexes for better query performance
+// ✅ Move the image count validation outside of the schema options
+productSchema.path('images').validate(function (images) {
+  return images.length <= 3;
+}, 'A product can have a maximum of 3 images.');
+
+// ✅ Indexing for performance
 productSchema.index({ category: 1, subcategory: 1 });
 productSchema.index({ createdAt: -1 });
 
-// Check if model already exists before defining it
+// Avoid redefining model
 module.exports = mongoose.models.Product || mongoose.model('Product', productSchema);

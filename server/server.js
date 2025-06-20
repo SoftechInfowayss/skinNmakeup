@@ -5,6 +5,7 @@ const path = require('path');
 const { connectToDB } = require('./database/db');
 const productRoutes = require('./routes/productRoutes');
 const authRoutes = require('./routes/Authroutes');
+const cwRoutes=require('./routes/CartWishlistRoutes');
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
 // Routes
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
-
+app.use('api/cw',cwRoutes);
 // Connect to MongoDB and start server
 const startServer = async () => {
   try {
